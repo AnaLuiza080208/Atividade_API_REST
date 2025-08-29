@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agenda Barbie</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Agenda Barbie</h1>
+    <p>Adicione suas tarefas e compromissos com elegância e estilo!</p>
+
+    <form id="form" class="form-barbie">
+      <div class="field">
+        <label for="titulo">Título da tarefa</label>
+        <input type="text" id="titulo" name="titulo" required />
+      </div>
+
+      <div class="field">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" name="descricao" rows="3"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="data">Data</label>
+        <input type="date" id="data" name="data" required />
+      </div>
+
+      <div class="field">
+        <label for="prioridade">Prioridade</label>
+        <select id="prioridade" name="prioridade" required>
+          <option value="" disabled selected>Selecione prioridade</option>
+          <option value="baixa">Baixa</option>
+          <option value="media">Média</option>
+          <option value="alta">Alta</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+          <option value="" disabled selected>Selecione o status</option>
+          <option value="pendente">Pendente</option>
+          <option value="andamento">Em andamento</option>
+          <option value="concluida">Concluída</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-barbie">Adicionar</button>
+    </form>
+
+    <ul id="lista" class="lista-barbie"></ul>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

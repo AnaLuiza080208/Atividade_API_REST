@@ -1,0 +1,143 @@
+
+body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: #ffe6f0;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+  
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #fff0f5;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+  }
+  
+
+  h1 {
+    color: #ff69b4;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    text-align: center;
+    color: #ff1493;
+    font-weight: bold;
+  }
+  
+
+  .form-barbie {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .field {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .field label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #ff1493;
+  }
+  
+  .field input,
+  .field textarea,
+  .field select {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #ffb6c1;
+    outline: none;
+    font-size: 14px;
+  }
+  
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus {
+    border-color: #ff69b4;
+    box-shadow: 0 0 5px #ff69b4;
+  }
+ 
+  .btn-barbie {
+    background: linear-gradient(45deg, #ff69b4, #ff1493);
+    border: none;
+    padding: 12px;
+    border-radius: 15px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .btn-barbie:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 20, 147, 0.6);
+  }
+  
+  .lista-barbie {
+    list-style: none;
+    padding: 0;
+    margin-top: 30px;
+  }
+  
+  .tarefa-barbie {
+    background: #fff0f5;
+    border: 2px solid #ffb6c1;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 10px rgba(255, 105, 180, 0.3);
+    transition: transform 0.2s;
+  }
+  
+  .tarefa-barbie:hover {
+    transform: translateY(-3px);
+  }
+  
+  .tarefa-barbie button {
+    background: #ff69b4;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-weight: bold;
+    transition: background 0.2s;
+  }
+  
+  .tarefa-barbie button:hover {
+    background: #ff1493;
+  }
+  
+
+  .status-pendente {
+    color: #ff4500; 
+    font-weight: bold;
+  }
+  
+  .status-andamento {
+    color: #1e90ff; 
+    font-weight: bold;
+  }
+  
+  .status-concluida {
+    color: #32cd32; 
+    font-weight: bold;
+  }
+  
+  @media (max-width: 640px) {
+    .container {
+      margin: 20px;
+      padding: 20px;
+    }
+  }
+  
