@@ -2,7 +2,6 @@ const form = document.getElementById('form');
 const lista = document.getElementById('lista');
 const API = '/api/tarefas';
 
-// Função para renderizar tarefas
 const renderTarefas = async () => {
   lista.innerHTML = '';
   (await (await fetch(API)).json()).forEach(t => {
@@ -19,11 +18,10 @@ const renderTarefas = async () => {
   });
 };
 
-// Função genérica de fetch
 const enviar = (url, metodo, corpo) =>
   fetch(url, { method: metodo, headers: { 'Content-Type': 'application/json' }, body: corpo && JSON.stringify(corpo) });
 
-// Adicionar tarefa
+
 form.addEventListener('submit', e => {
   e.preventDefault();
   const tarefa = Object.fromEntries(new FormData(form));
@@ -33,10 +31,8 @@ form.addEventListener('submit', e => {
   });
 });
 
-// Remover tarefa
 window.remover = id => enviar(`${API}/${id}`, 'DELETE').then(renderTarefas);
 
-// Editar tarefa
 window.editar = async id => {
   const titulo = prompt('Novo título:');
   if (!titulo) return;
@@ -46,5 +42,4 @@ window.editar = async id => {
   renderTarefas();
 };
 
-// Inicializa
 renderTarefas();
