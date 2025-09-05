@@ -1,39 +1,46 @@
 const express = require('express');
-const fs = require('fs'); 
-const path = require('path'); 
+const fs = require('fs');
+const path = require('path');
 const router = express.Router();
+
 const arquivo = path.join(__dirname, '../dados/tarefas.json');
 
 const lerTarefas = () => JSON.parse(fs.readFileSync(arquivo, 'utf-8'));
 const salvarTarefas = (tarefas) => fs.writeFileSync(arquivo, JSON.stringify(tarefas, null, 2));
-const encontrarTarefa = (id) => lerTarefas().find(t => t.id == id);
+const encontrarTarefa = (id) => lerTarefas().find(t => t.id === Number(id));
 
-router.get('/', (req, res) => res.json(lerTarefas()));
+router.get('/', (req, res) => {
+  res.json(lerTarefas());
+});
 
 router.post('/', (req, res) => {
-  const tarefas = lerTarefas(); // Lê as tarefas atuais
-  const nova = { id: Date.now(), ...req.body }; // Cria uma nova tarefa com id único
-  tarefas.push(nova); // Adiciona a nova tarefa ao array
-  salvarTarefas(tarefas); // Salva no arquivo JSON
-  res.status(201).json(nova); // Retorna a nova tarefa criada
+  const tarefas = lerTarefas();
+  const nova = { id: Date.now(), ...req.body };
+  tarefas.push(nova);
+  salvarTarefas(tarefas);
+  res.status(201).json(nova);
 });
 
 router.put('/:id', (req, res) => {
   const tarefas = lerTarefas();
-  const tarefa = encontrarTarefa(req.params.id); 
-  if (!tarefa) return res.status(404).json({ error: 'Tarefa não encontrada' });
+  const id = Number(req.params.id);
+  const index = tarefas.findIndex(t => t.id === id);
 
-  Object.assign(tarefa, req.body);
-  salvarTarefas(tarefas); 
-  res.json(tarefa); 
+  if (index === -1) return res.status(404).json({ error: 'Tarefa não encontrada' });
+
+  tarefas[index] = { id, ...req.body };
+  salvarTarefas(tarefas);
+
+  res.json(tarefas[index]);
 });
 
 router.delete('/:id', (req, res) => {
   const tarefas = lerTarefas();
-  if (!tarefas.some(t => t.id == req.params.id))
+  const id = Number(req.params.id);
+  if (!tarefas.some(t => t.id === id))
     return res.status(404).json({ error: 'Tarefa não encontrada' });
 
-  salvarTarefas(tarefas.filter(t => t.id != req.params.id)); // Remove a tarefa e salva
+  salvarTarefas(tarefas.filter(t => t.id !== id));
   res.json({ message: 'Tarefa removida' });
 });
 
