@@ -39,7 +39,7 @@ form.addEventListener('submit', e => {
 
   const tarefa = Object.fromEntries(new FormData(form)); // pega os dados digitados
 
-  enviar(API, 'POST', tarefa).then(() => {
+  enviar(API, 'POST', tarefa).then(() => { //envia
     form.reset(); // limpa os campos
     renderTarefas(); // mostra a lista de novo
   });
