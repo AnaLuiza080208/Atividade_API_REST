@@ -1,84 +1,84 @@
-const form = document.getElementById('form'); // pega o form da página
-const lista = document.getElementById('lista'); // pega onde as tarefas vão aparecer
-const API = '/api/tarefas'; // endereço da API
+const form = document.getElementById("form");
+const lista = document.getElementById("lista");
 
-const renderTarefas = async () => {
-  lista.innerHTML = ''; // limpa a lista antes de mostrar de novo
+// pega do localStorage ou cria lista vazia dependendo do caso
+function pegarTarefas() {
+  return JSON.parse(localStorage.getItem("tarefas")) || [];
+}
 
-  const tarefas = await (await fetch(API)).json(); // pega tudo do backend
+// salva no localStorage
+function salvarTarefas(tarefas) {
+  localStorage.setItem("tarefas", JSON.stringify(tarefas));
+}
 
-  tarefas.forEach(t => {
-    const li = document.createElement('li'); 
-    li.className = 'tarefa-barbie';
+// renderiza lista na tela
+function renderizar() {
+  const tarefas = pegarTarefas();
+  lista.innerHTML = "";
 
-    // monta como vai aparecer na tela
+  tarefas.forEach((tarefa) => {
+    const li = document.createElement("li");
+    li.className = "tarefa-barbie";
+
     li.innerHTML = `
-      <h3>${t.titulo}</h3>
-      <p>${t.descricao || ''}</p>
-      <p>Data: ${t.data} | Prioridade: ${t.prioridade} | 
-         Status: <span class="status-${t.status}">${t.status}</span></p>
-      <button onclick="editar(${t.id})">Editar</button>
-      <button onclick="remover(${t.id})">Excluir</button>
+      <h3>${tarefa.titulo}</h3>
+      <p>${tarefa.descricao}</p>
+      <p><strong>Data:</strong> ${tarefa.data}</p>
+      <p><strong>Prioridade:</strong> ${tarefa.prioridade}</p>
+      <p><strong>Status:</strong> <span class="status-${tarefa.status}">${tarefa.status}</span></p>
+      <button onclick="editarTarefa(${tarefa.id})">Editar</button>
+      <button onclick="deletarTarefa(${tarefa.id})">Excluir</button>
     `;
 
-    lista.appendChild(li); // coloca na tela
+    lista.appendChild(li);
   });
-};
+}
 
-// função que serve pra mandar qualquer coisa pro backend
-const enviar = (url, metodo, corpo) =>
-  fetch(url, {
-    method: metodo,
-    headers: { 'Content-Type': 'application/json' },
-    body: corpo && JSON.stringify(corpo) // só manda se tiver algo
-  });
+// adicionar tarefa
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const tarefas = pegarTarefas();
 
-// quando mandar o form
-form.addEventListener('submit', e => {
-  e.preventDefault(); // não deixa recarregar a página
-
-  const tarefa = Object.fromEntries(new FormData(form)); // pega os dados digitados
-
-  enviar(API, 'POST', tarefa).then(() => { //envia
-    form.reset(); // limpa os campos
-    renderTarefas(); // mostra a lista de novo
-  });
-});
-
-// remover é só mandar pro backend e atualizar a lista
-window.remover = id =>
-  enviar(`${API}/${id}`, 'DELETE').then(renderTarefas);
-
-// editar precisa achar a tarefa certa primeiro
-window.editar = async id => {
-  const tarefas = await (await fetch(API)).json();
-  const tarefa = tarefas.find(t => t.id === id);
-  if (!tarefa) return alert('Tarefa não encontrada.');
-
-  // pede os novos dados
-  const novoTitulo = prompt('Novo título:', tarefa.titulo);
-  if (!novoTitulo) return;
-
-  const novaDescricao = prompt('Nova descrição:', tarefa.descricao) || tarefa.descricao;
-
-  const novoStatus = prompt('Novo status: pendente, andamento ou concluida:', tarefa.status).toLowerCase();
-  if (!['pendente', 'andamento', 'concluida'].includes(novoStatus)) return alert('Status inválido!');
-
-  const novaPrioridade = prompt('Nova prioridade: baixa, media ou alta:', tarefa.prioridade).toLowerCase();
-  if (!['baixa', 'media', 'alta'].includes(novaPrioridade)) return alert('Prioridade inválida!');
-
-  // cria o objeto atualizado
-  const tarefaAtualizada = { 
-    titulo: novoTitulo, 
-    descricao: novaDescricao,
-    status: novoStatus,
-    data: tarefa.data, // mantém a data original
-    prioridade: novaPrioridade
+  const nova = {
+    id: Date.now(),
+    titulo: form.titulo.value,
+    descricao: form.descricao.value,
+    data: form.data.value,
+    prioridade: form.prioridade.value,
+    status: form.status.value,
   };
 
-  await enviar(`${API}/${id}`, 'PUT', tarefaAtualizada); // manda pro backend
-  renderTarefas(); // atualiza a lista
-};
+  tarefas.push(nova);
+  salvarTarefas(tarefas);
+  renderizar();
+  form.reset();
+});
 
-// já mostra tudo assim que abre a página
-renderTarefas();
+// editar tarefa
+function editarTarefa(id) {
+  const tarefas = pegarTarefas();
+  const tarefa = tarefas.find((t) => t.id === id);
+
+  if (!tarefa) return;
+
+  // joga os valores pro formulário
+  form.titulo.value = tarefa.titulo;
+  form.descricao.value = tarefa.descricao;
+  form.data.value = tarefa.data;
+  form.prioridade.value = tarefa.prioridade;
+  form.status.value = tarefa.status;
+
+  // remove a antiga
+  salvarTarefas(tarefas.filter((t) => t.id !== id));
+  renderizar();
+}
+
+// deletar tarefa
+function deletarTarefa(id) {
+  const tarefas = pegarTarefas().filter((t) => t.id !== id);
+  salvarTarefas(tarefas);
+  renderizar();
+}
+
+// primeira renderização
+renderizar();

@@ -1,13 +1,23 @@
-const express = require("express"); // pega o Express pra criar o app
-const path = require("path");       // ajuda a montar caminhos de arquivos
-const logger = require("./middleware/logger"); // meu middleware que mostra logs no console
+// configura o Express e as rotas
+const express = require('express');
+const path = require('path');
+const logger = require('./middleware/logger');
 
-const app = express(); // cria o app do Express
+const app = express();
 
-app.use(logger); // cada requisição passa por aqui, só pra ver o que tá chegando
-app.use(express.json()); // transforma JSON do corpo da requisição em objeto
-app.use(express.urlencoded({ extended: true })); // faz o mesmo pra dados de form
-app.use(express.static(path.join(__dirname, "public"))); // entrega arquivos estáticos tipo HTML, CSS e JS
-app.use("/api/tarefas", require("./rotas/tarefaRoutes")); // todas as rotas de tarefas ficam aqui
+app.use(logger); // meu logger mental
+app.use(express.json()); // aceita JSON no corpo
+app.use(express.urlencoded({ extended: true }));
 
-module.exports = app; // exporta o app pra usar no server.js
+// serve arquivos estáticos se quiser usar frontend
+app.use(express.static(path.join(__dirname, 'public')));
+
+// rota da API de tarefas
+app.use('/api/tarefas', require('./rotas/tarefaRoutes'));
+
+// tratamento simples de rota não encontrada
+app.use((req, res) => {
+  res.status(404).json({ error: 'Rota não encontrada' });
+});
+
+module.exports = app;
